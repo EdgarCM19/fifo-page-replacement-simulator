@@ -10,6 +10,7 @@ export default class RoundRobin {
 
     constructor(job_queue : JobQueue, quantum : number){
         this.job_queue = job_queue;
+        this.current_process = null;
         this.quantum = quantum;
         this.computed_time = 0;
     }
@@ -19,14 +20,14 @@ export default class RoundRobin {
         this.computed_time = 0;
         return this.current_process;
     }
-    
+
     public tick() : boolean {
         if(this.current_process === null) return true;
-        if(++this.current_process.computed_time > this.current_process.total_time || 
+        if(++this.current_process.computed_time > this.current_process.total_time ||
             ++this.computed_time >= this.quantum) return true;
         return false;
     }
-    
+
     public registerProcess(process : Process){
         this.job_queue.registerProcess(process);
     }

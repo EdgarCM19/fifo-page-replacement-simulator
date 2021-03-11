@@ -1,14 +1,14 @@
 import Process from "./process";
-import { readFileSync } from 'fs';
+// import { readFileSync } from 'fs';
 
 export default class JobQueue {
 
     queue : Process[];
     index : number;
 
-    constructor(){ 
+    constructor(){
         this.queue = [];
-        this.index = 0; 
+        this.index = 0;
     }
 
     public registerProcess(process: Process) : void {
@@ -25,6 +25,7 @@ export default class JobQueue {
         return this.queue[this.index++ % this.queue.length];
     }
 
+    /*
     public static loadFromFile(file_path : string): JobQueue {
         let content = JSON.parse(readFileSync(file_path, 'utf8'));
         let temp_queue = new JobQueue();
@@ -34,6 +35,7 @@ export default class JobQueue {
         });
         return temp_queue;
     }
+    */
 
     public toString() : string {
         return this.queue.join('-----------------\n');

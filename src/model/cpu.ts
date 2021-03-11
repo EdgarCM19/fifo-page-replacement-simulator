@@ -1,8 +1,10 @@
-import JobQueue from "./job_queue";
-import MMU from "./mmu";
-import Process from "./process";
-import RoundRobin from "./rr_scheduler";
-import VirtualMemory from "./virtual_memory";
+// eslint-disable-file no-use-before-define
+import JobQueue from './job_queue';
+import { IProcessInput } from './loader';
+import MMU from './mmu';
+import Process from './process';
+import RoundRobin from './rr_scheduler';
+import VirtualMemory from './virtual_memory';
 
 export default class CPU {
 
@@ -15,9 +17,12 @@ export default class CPU {
     next_proc_t_arrival : number;
     next_proc           : Process;
 
+    total_processes     : number;
+    completed_processes : number;
+
     virtual : VirtualMemory;
-    
-    input =  [
+
+    input : IProcessInput[] =  [
         {
             pid: 'A',
             arrival_time: 0,
@@ -50,17 +55,22 @@ export default class CPU {
         this.computed_process = this.scheduler.nextProcessToCompute();
         this.ended = false;
         this.computed_time = 0;
+        this.mmu = new MMU();
         this.input = this.input.sort((a, b) => {
             return b.arrival_time - a.arrival_time;
         });
         [this.next_proc_t_arrival, this.next_proc] = this.nextProcessToArrival();
 
         this.virtual = new VirtualMemory(4, 16, 'mb');
+
+        this.total_processes = 0;
+        this.completed_processes = 0;
     }
 
     public next(): boolean {
         console.log(`[TIME]> ${this.computed_time}`);
         if(this.computed_time === this.next_proc_t_arrival){
+            this.total_processes++;
             this.scheduler.registerProcess(this.next_proc);
             console.log(`Se registro el proceso: ${this.next_proc} `);
             [this.next_proc_t_arrival, this.next_proc] = this.nextProcessToArrival();
@@ -79,6 +89,7 @@ export default class CPU {
     }
 
     private deleteProcess() : void {
+        this.completed_processes++;
         let pid = this.computed_process.PID;
         this.scheduler.deleteProcess(pid);
         //this.mmu.deleteProcess(pid);
