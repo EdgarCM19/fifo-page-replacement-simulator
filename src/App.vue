@@ -14,12 +14,19 @@ export default {
 </script>
 
 <style>
+.html{
+  background: #2c3e50;
+  width: 100vw;
+  min-height: 100vh;
+  height: 100vh;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  background: #292D32;
 }
 
 #nav {

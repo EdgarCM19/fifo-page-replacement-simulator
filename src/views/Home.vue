@@ -1,7 +1,17 @@
 <template>
   <div class="home">
     <div class="algo">
-      {{ settings.settings.virtual_size }}
+      <Button>Holis</Button>
+      <Input
+        :value="test_binding"
+        v-model="test_binding">Jejeje</Input>
+      <Dropdown
+        :iterable="pids"
+        :placeholder="'Seleccione un elemento'"
+        v-model="test_binding"
+        >
+      </Dropdown>
+      <div>{{test_binding}}</div>
     </div>
     <div class="process-form">
       <label for="pid">PID:</label>
@@ -25,7 +35,13 @@
         Ingrese las referencias separadas por ','
       </label>
       <label v-else for="refs">Seleccione entre modo manual y random</label>
-      <button @click="addProcess">Agregar</button>
+      <!-- <button @click="addProcess">Agregar</button> -->
+      <Button
+        :on_click_fn="addProcess"
+        :bg_color="'#292d32'"
+        :fg_color="'#ecf0f3'">
+        Holas
+      </Button>
     </div>
     <div class="config-form">
       <label for="virtual-size">Tamaño de la memoria virtual</label>
@@ -53,17 +69,26 @@
 <script lang="ts">
 /* eslint-disable no-console */
 import { IProcessInput } from '@/model/loader';
+import Button from '@/components/Button.vue';
+import Input from '@/components/Input.vue';
+import Dropdown from '@/components/Dropdown.vue';
 import {
   defineComponent, ref, reactive, computed, inject,
 } from 'vue';
 
 export default defineComponent({
+  components: {
+    Button,
+    Input,
+    Dropdown,
+  },
   setup() {
     const settings = inject('settings');
 
     const refOpt = ref('');
     const pids = ref(['A', 'B', 'C', 'D']);
     const refs_input = ref('');
+    const test_binding = ref('');
     const inputProcesses = ref<IProcessInput []>([]);
 
     const newProcessProps = reactive({
@@ -77,6 +102,10 @@ export default defineComponent({
     const validateRefsInput = computed(
       (): boolean => (refs_input.value.replaceAll('/s+/g', '').match('([0-9]+)(,[0-9]+)*') === null),
     );
+
+    function test() {
+      console.log('Hola muindo jajajaja');
+    }
 
     function addProcess() {
       console.log(`${newProcessProps.pid}-${newProcessProps.arrival_time}`);
@@ -106,6 +135,8 @@ export default defineComponent({
       inputProcesses,
       validateRefsInput,
       settings,
+      test,
+      test_binding,
     };
   },
 });
@@ -116,6 +147,12 @@ export default defineComponent({
 laber, input, select {
   display: block;
 }
+
+.home {
+  background-color: #292d32;
+  color: #ecf0f3;
+}
+
 .home,
 .process-form,
 .config-form {
